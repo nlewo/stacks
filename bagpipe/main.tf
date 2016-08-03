@@ -1,5 +1,5 @@
 resource "openstack_compute_keypair_v2" "rj45" {
-  name = "rj45"
+  name = "rj45-terraform"
   public_key = "${file("${var.ssh_key_file}.pub")}"
   region = "${var.region}"
 }
