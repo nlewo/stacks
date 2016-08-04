@@ -24,7 +24,7 @@ resource "openstack_compute_instance_v2" "backend" {
   }
   key_pair = "${var.key_pair}"
   security_groups = ["${openstack_compute_secgroup_v2.backend.name}"]
-  count = "${var.instances.backend}"
+  count = "${var.instances["backend"]}"
   scheduler_hints {
     group = "${openstack_compute_servergroup_v2.backend.id}"
   }
@@ -85,14 +85,14 @@ resource "openstack_networking_floatingip_v2" "vip" {
 resource "openstack_networking_floatingip_v2" "backend" {
   region = "${var.region}"
   pool = "public"
-  count = "${var.instances.backend}"
+  count = "${var.instances["backend"]}"
 }
 
 resource "openstack_lb_member_v1" "backend" {
   pool_id = "${openstack_lb_pool_v1.backend.id}"
   address = "${element(openstack_compute_instance_v2.backend.*.network.0.fixed_ip_v4, count.index)}"
   port = 443
-  count = "${var.instances.backend}"
+  count = "${var.instances["backend"]}"
   region = "${var.region}"
 }
 
