@@ -8,6 +8,7 @@ packages:
   - emacs23-nox
   - make
   - libc6-dev
+  - haproxy=1.5.14-1ubuntu0.15.10.1~ubuntu14.04.1
   
 runcmd:
   - su cloud -c "tmux new-session -d"
