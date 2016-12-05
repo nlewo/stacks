@@ -51,6 +51,7 @@ write_files:
         
         [[post-config|$NEUTRON_CONF]]
         [DEFAULT]
+        # service_plugins = neutron_plugin_contrail.plugins.opencontrail.loadbalancer.plugin.LoadBalancerPlugin
         service_plugins = 
         api_extensions_path = extensions:/opt/stack/contrail/openstack/neutron_plugin/neutron_plugin_contrail/extensions:/opt/stack/neutron-lbaas/neutron_lbaas/extensions
         [quotas]
