@@ -14,5 +14,9 @@ variable "image_name" {
 }
 
 variable "name" {
-  default = "terraform"
+  default = "contrail-devstack"
+}
+
+variable "contrail_branch" {
+  default = "master"
 }

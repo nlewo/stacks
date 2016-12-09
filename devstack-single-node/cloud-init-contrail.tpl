@@ -45,9 +45,10 @@ write_files:
         enable_plugin contrail https://github.com/zioc/contrail-devstack-plugin.git
         enable_plugin neutron-lbaas https://github.com/openstack/neutron-lbaas.git stable/mitaka
 
-        CONTRAIL_BRANCH=master
+        CONTRAIL_BRANCH=${contrail_branch}
         SCONS_JOBS=$(lscpu -p | grep -cve '^#')
 
+        VHOST_INTERFACE_NAME=eth1
         
         [[post-config|$NEUTRON_CONF]]
         [DEFAULT]
