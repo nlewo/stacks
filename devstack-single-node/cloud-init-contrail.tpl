@@ -49,6 +49,9 @@ write_files:
         SCONS_JOBS=$(lscpu -p | grep -cve '^#')
 
         VHOST_INTERFACE_NAME=eth1
+	VHOST_INTERFACE_CIDR=10.0.0.1/24
+	VHOST_INTERFACE_IP=10.0.0.1
+	DEFAULT_GW=10.0.0.254
         
         [[post-config|$NEUTRON_CONF]]
         [DEFAULT]
