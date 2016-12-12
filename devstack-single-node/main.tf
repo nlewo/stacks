@@ -1,6 +1,7 @@
 resource "openstack_networking_floatingip_v2" "master" {
   region = "${var.region}"
   pool = "public"
+  port_id = "${openstack_networking_port_v2.admin.id}"
 }
 
 resource "openstack_networking_network_v2" "net_simple" {
@@ -54,7 +55,6 @@ resource "openstack_compute_instance_v2" "master" {
   flavor_id = "${var.flavor_id}"
   network { 
     port = "${openstack_networking_port_v2.admin.id}"
-    floating_ip = "${openstack_networking_floatingip_v2.master.address}"
   }
   network { 
     port = "${openstack_networking_port_v2.contrail.id}"
@@ -72,7 +72,6 @@ resource "template_file" "master" {
 
 resource "openstack_networking_port_v2" "admin" {
   region = "${var.region}"
-#  name = "${var.name}"
   network_id = "${openstack_networking_network_v2.net_simple.id}"
   admin_state_up = "true"
   security_group_ids = ["${openstack_compute_secgroup_v2.ssh.id}"]
@@ -83,7 +82,6 @@ resource "openstack_networking_port_v2" "admin" {
 
 resource "openstack_networking_port_v2" "contrail" {
   region = "${var.region}"
-  name = "${var.name}"
   network_id = "${openstack_networking_network_v2.contrail.id}"
   admin_state_up = "true"
     fixed_ip {
