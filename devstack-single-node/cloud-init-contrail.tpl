@@ -45,13 +45,17 @@ write_files:
         enable_plugin contrail https://github.com/zioc/contrail-devstack-plugin.git
         enable_plugin neutron-lbaas https://github.com/openstack/neutron-lbaas.git stable/mitaka
 
-        CONTRAIL_BRANCH=${contrail_branch}
+        # CONTRAIL_REPO=https://github.com/eonpatapon/contrail-vnc.git
+        CONTRAIL_BRANCH=R3.2
+
         SCONS_JOBS=$(lscpu -p | grep -cve '^#')
 
+	RECLONE=no
+
         VHOST_INTERFACE_NAME=eth1
-	VHOST_INTERFACE_CIDR=10.0.0.1/24
-	VHOST_INTERFACE_IP=10.0.0.1
-	DEFAULT_GW=10.0.0.254
+        VHOST_INTERFACE_CIDR=10.0.0.1/24
+        VHOST_INTERFACE_IP=10.0.20.1
+        DEFAULT_GW=10.0.0.254
         
         [[post-config|$NEUTRON_CONF]]
         [DEFAULT]

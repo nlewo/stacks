@@ -18,5 +18,5 @@ variable "name" {
 }
 
 variable "contrail_branch" {
-  default = "master"
+  default = "R2.21-cloudwatt"
 }
