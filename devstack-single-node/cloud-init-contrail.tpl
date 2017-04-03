@@ -50,7 +50,7 @@ write_files:
 
         SCONS_JOBS=$(lscpu -p | grep -cve '^#')
 
-	RECLONE=no
+        RECLONE=no
 
         VHOST_INTERFACE_NAME=eth1
         VHOST_INTERFACE_CIDR=10.0.0.1/24
