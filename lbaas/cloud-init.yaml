@@ -1,0 +1,5 @@
+#cloud-config
+
+runcmd:
+  - screen -d -m sh -c "while true;do { printf '%b\r\n' 'HTTP/1.1 200 OK\n'; hostname;}|nc -l 80;done"
+  - screen -d -m sh -c "while true;do { printf '%b\r\n' 'HTTP/1.1 200 OK\n'; hostname;}|nc -l 443;done"

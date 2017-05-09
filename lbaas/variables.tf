@@ -1,9 +1,8 @@
-variable "flavor_id" {
-  default = 22
+variable "flavor" {
+  default = "m1.small"
 }
 
 variable "region" {
-  default = "fr0"
 }
 
 variable "key_pair" {
@@ -14,13 +13,6 @@ variable "image_name" {
   default = "Ubuntu 14.04"
 }
 
-variable "ssh_key_file" {
-}
-
 variable instances {
-  type = "map"
-
-  default {
-    backend = "2"
-  }
+    default = "2"
 }

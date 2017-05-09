@@ -1,11 +1,5 @@
-resource "openstack_compute_keypair_v2" "rj45" {
-  name = "rj45-terraform"
-  public_key = "${file("${var.ssh_key_file}.pub")}"
-  region = "${var.region}"
-}
-
 resource "openstack_compute_servergroup_v2" "backend" {
-  name = "lb_group_backend"
+  name = "lb_group_terraform_lbaas"
   policies = ["anti-affinity"]
   region = "${var.region}"
 } 
@@ -14,20 +8,21 @@ resource "openstack_compute_instance_v2" "backend" {
   region = "${var.region}"
   name = "lb_backend_${count.index}"
   image_name = "${var.image_name}"
-  flavor_id = "${var.flavor_id}"
+  flavor_name = "${var.flavor}"
   network { 
     uuid = "${openstack_networking_network_v2.backend.id}"
     floating_ip = "${element(openstack_networking_floatingip_v2.backend.*.address, count.index)}"
   }
-  metadata {
-    groups = "lb_backend"
-  }
-  key_pair = "${var.key_pair}"
-  security_groups = ["${openstack_compute_secgroup_v2.backend.name}"]
-  count = "${var.instances.backend}"
   scheduler_hints {
     group = "${openstack_compute_servergroup_v2.backend.id}"
   }
+  key_pair = "${var.key_pair}"
+  security_groups = ["${openstack_compute_secgroup_v2.backend.name}"]
+  count = "${var.instances}"
+  scheduler_hints {
+    group = "${openstack_compute_servergroup_v2.backend.id}"
+  }
+  user_data = "${file("cloud-init.yaml")}"
 }
 
 resource "openstack_networking_network_v2" "backend" {
@@ -85,14 +80,14 @@ resource "openstack_networking_floatingip_v2" "vip" {
 resource "openstack_networking_floatingip_v2" "backend" {
   region = "${var.region}"
   pool = "public"
-  count = "${var.instances.backend}"
+  count = "${var.instances}"
 }
 
 resource "openstack_lb_member_v1" "backend" {
   pool_id = "${openstack_lb_pool_v1.backend.id}"
   address = "${element(openstack_compute_instance_v2.backend.*.network.0.fixed_ip_v4, count.index)}"
   port = 443
-  count = "${var.instances.backend}"
+  count = "${var.instances}"
   region = "${var.region}"
 }
 
