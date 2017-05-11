@@ -42,6 +42,8 @@ write_files:
 
         enable_service tempest
 
+        disable_service ui-jobs ui-webs
+
         enable_plugin contrail https://github.com/zioc/contrail-devstack-plugin.git
         enable_plugin neutron-lbaas https://github.com/openstack/neutron-lbaas.git stable/mitaka
 
