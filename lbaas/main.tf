@@ -1,11 +1,9 @@
 resource "openstack_compute_servergroup_v2" "backend" {
   name = "lb_group_terraform_lbaas"
   policies = ["anti-affinity"]
-  region = "${var.region}"
 } 
 
 resource "openstack_compute_instance_v2" "backend" {
-  region = "${var.region}"
   name = "lb_backend_${count.index}"
   image_name = "${var.image_name}"
   flavor_name = "${var.flavor}"
@@ -28,7 +26,6 @@ resource "openstack_compute_instance_v2" "backend" {
 resource "openstack_networking_network_v2" "backend" {
   name = "lbaas-backend"
   admin_state_up = "true"
-  region = "${var.region}"
 }
 
 resource "openstack_networking_subnet_v2" "backend" {
@@ -36,14 +33,12 @@ resource "openstack_networking_subnet_v2" "backend" {
   network_id = "${openstack_networking_network_v2.backend.id}"
   cidr = "10.22.22.0/24"
   ip_version = 4
-  region = "${var.region}"
   enable_dhcp = true
 }
 
 resource "openstack_networking_network_v2" "vip" {
   name = "lbaas-vip"
   admin_state_up = "true"
-  region = "${var.region}"
 }
 
 resource "openstack_networking_subnet_v2" "vip" {
@@ -51,7 +46,6 @@ resource "openstack_networking_subnet_v2" "vip" {
   network_id = "${openstack_networking_network_v2.vip.id}"
   cidr = "10.55.55.0/24"
   ip_version = 4
-  region = "${var.region}"
 }
 
 resource "openstack_lb_pool_v1" "backend" {
@@ -59,7 +53,6 @@ resource "openstack_lb_pool_v1" "backend" {
   protocol = "TCP"
   subnet_id = "${openstack_networking_subnet_v2.backend.id}"
   lb_method = "ROUND_ROBIN"
-  region = "${var.region}"
 }
 
 resource "openstack_lb_vip_v1" "vip" {
@@ -68,17 +61,14 @@ resource "openstack_lb_vip_v1" "vip" {
   protocol = "TCP"
   port = 443
   pool_id = "${openstack_lb_pool_v1.backend.id}"
-  region = "${var.region}"
 }
 
 resource "openstack_networking_floatingip_v2" "vip" {
-  region = "${var.region}"
   pool = "public"
   port_id = "${openstack_lb_vip_v1.vip.port_id}"
 }
 
 resource "openstack_networking_floatingip_v2" "backend" {
-  region = "${var.region}"
   pool = "public"
   count = "${var.instances}"
 }
@@ -88,11 +78,9 @@ resource "openstack_lb_member_v1" "backend" {
   address = "${element(openstack_compute_instance_v2.backend.*.network.0.fixed_ip_v4, count.index)}"
   port = 443
   count = "${var.instances}"
-  region = "${var.region}"
 }
 
 resource "openstack_compute_secgroup_v2" "backend" {
-  region = "${var.region}"
   name = "lb_secgroup_backend"
   description = "lb_secgroup_backend"
   rule {
