@@ -1,0 +1,1 @@
+A VM on a SNAT network that redirects ping 8.8.8.8 output to the console-log.
